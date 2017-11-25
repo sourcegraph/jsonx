@@ -221,6 +221,16 @@ func TestComputePropertyEdit(t *testing.T) {
 			},
 		})
 	})
+	t.Run("insert item to undefined array", func(t *testing.T) {
+		assertEdits(t, []testCase{
+			{
+				input: "{\n}",
+				path:  MakePath("foo", -1),
+				value: "bar",
+				want:  "{\n  \"foo\": [\n    \"bar\"\n  ]\n}",
+			},
+		})
+	})
 	t.Run("insert item", func(t *testing.T) {
 		assertEdits(t, []testCase{
 			{
