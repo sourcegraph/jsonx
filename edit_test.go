@@ -281,7 +281,6 @@ func TestComputePropertyEdit(t *testing.T) {
 			},
 		})
 	})
-
 	t.Run("remove last item in the array if there is a comment in the beginning", func(t *testing.T) {
 		assertEdits(t, []testCase{
 			{
@@ -289,6 +288,66 @@ func TestComputePropertyEdit(t *testing.T) {
 				path:   MakePath(2),
 				remove: true,
 				want:   "// This is a comment\n[\n  1,\n  \"foo\"\n]",
+			},
+		})
+	})
+	t.Run("edit item in array with one item", func(t *testing.T) {
+		assertEdits(t, []testCase{
+			{
+				input: "[\n  1\n]",
+				path:  MakePath(0),
+				value: 2,
+				want:  "[\n  2\n]",
+			},
+		})
+	})
+	t.Run("edit item in the middle of the array", func(t *testing.T) {
+		assertEdits(t, []testCase{
+			{
+				input: "[\n  1,\n  2,\n  3\n]",
+				path:  MakePath(1),
+				value: 4,
+				want:  "[\n  1,\n  4,\n  3\n]",
+			},
+		})
+	})
+	t.Run("edit last item in the array", func(t *testing.T) {
+		assertEdits(t, []testCase{
+			{
+				input: "[\n  1,\n  2,\n  \"foo\"\n]",
+				path:  MakePath(2),
+				value: "bar",
+				want:  "[\n  1,\n  2,\n  \"bar\"\n]",
+			},
+		})
+	})
+	t.Run("edit last item in the array if ends with comma", func(t *testing.T) {
+		assertEdits(t, []testCase{
+			{
+				input: "[\n  1,\n  \"foo\",\n  \"bar\",\n]",
+				path:  MakePath(2),
+				value: "qux",
+				want:  "[\n  1,\n  \"foo\",\n  \"qux\",\n]",
+			},
+		})
+	})
+	t.Run("edit last item in the array if there is a comment in the beginning", func(t *testing.T) {
+		assertEdits(t, []testCase{
+			{
+				input: "// This is a comment\n[\n  1,\n  \"foo\",\n  \"bar\"\n]",
+				path:  MakePath(2),
+				value: "qux",
+				want:  "// This is a comment\n[\n  1,\n  \"foo\",\n  \"qux\"\n]",
+			},
+		})
+	})
+	t.Run("edit item in a nested array", func(t *testing.T) {
+		assertEdits(t, []testCase{
+			{
+				input: "[\n  1,\n  {\n    \"foo\": [\n      2 // This is a comment\n    ]\n  },\n  3\n]",
+				path:  MakePath(1, "foo", 0),
+				value: 4,
+				want:  "[\n  1,\n  {\n    \"foo\": [\n      4 // This is a comment\n    ]\n  },\n  3\n]",
 			},
 		})
 	})

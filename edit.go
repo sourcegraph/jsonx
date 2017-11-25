@@ -196,7 +196,16 @@ func computePropertyEdit(text string, path Path, value interface{}, insertionInd
 			return edits, parseErrorCodes, err
 		}
 
-		return nil, nil, errors.New("array modification not supported yet")
+		// Modify
+		editIndex := lastSegment.Index
+		toEdit := parent.Children[editIndex]
+		data, err := json.Marshal(value)
+		if err != nil {
+			return nil, nil, err
+		}
+		edit := Edit{Offset: toEdit.Offset, Length: toEdit.Length, Content: string(data)}
+		edits, err := FormatEdit(text, edit, options)
+		return edits, parseErrorCodes, err
 	}
 
 	var noun string
