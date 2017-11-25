@@ -87,6 +87,9 @@ func Parse(text string, options ParseOptions) ([]byte, []ParseErrorCode) {
 	}
 	Walk(text, options, visitor)
 
+	if len(*currentParent.array) == 0 {
+		return nil, errors
+	}
 	data, err := json.Marshal((*currentParent.array)[0])
 	if err != nil {
 		panic(err) // should never happen
