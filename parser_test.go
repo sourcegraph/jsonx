@@ -60,7 +60,6 @@ func TestParser(t *testing.T) {
 
 		// array with errors
 		"[,]":           {want: "[]", errors: true},
-		"[ 1, 5, ]":     {want: "[1,5]"},
 		"[ 1, 2, ]":     {options: &ParseOptions{TrailingCommas: false}, want: "[1,2]", errors: true},
 		"[ 1 2, 3]":     {want: "[1,2,3]", errors: true},
 		"[ ,1, 2, 3 ]":  {want: "[1,2,3]", errors: true},
@@ -76,8 +75,10 @@ func TestParser(t *testing.T) {
 		`{ "hello": [] }`:                {want: `{"hello":[]}`},
 		`{ "hello": [], "world": {}, }`:  {want: `{"hello":[],"world":{}}`},
 		`{ "hello2": [], "world": {} }`:  {want: `{"hello2":[],"world":{}}`},
+		"[ 1, 5, ]":                      {want: "[1,5]"},
 		`{ "hello2": [], }`:              {options: &ParseOptions{TrailingCommas: false}, want: `{"hello2":[]}`, errors: true},
 		`{ "hello2": [], "world": {}, }`: {options: &ParseOptions{TrailingCommas: false}, want: `{"hello2":[],"world":{}}`, errors: true},
+		"[ 1, 6, ]":                      {options: &ParseOptions{TrailingCommas: false}, want: "[1,6]", errors: true},
 	}
 	for input, test := range tests {
 		label := fmt.Sprintf("%q", input)
@@ -92,6 +93,9 @@ func TestParser(t *testing.T) {
 		output, errors := Parse(input, *options)
 		if test.errors && errors == nil {
 			t.Errorf("%s: got no parse errors, want parse errors", label)
+		}
+		if !test.errors && errors != nil {
+			t.Errorf("%s: got parse errors %v, want no parse errors", label, errors)
 		}
 		if string(output) != test.want {
 			t.Errorf("%s: got output %s, want %s", label, output, test.want)
