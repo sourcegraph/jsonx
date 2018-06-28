@@ -138,3 +138,30 @@ func printAndDestroyTree(root *Node) string {
 	}
 	return string(data)
 }
+
+func TestPath_JSON(t *testing.T) {
+	p1 := Path{
+		{IsProperty: true, Property: "a"},
+		{IsProperty: true, Property: ""},
+		{Index: 0},
+		{Index: 1},
+	}
+
+	data, err := json.Marshal(p1)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := `["a","",0,1]`; string(data) != want {
+		t.Errorf("got %s, want %s", data, want)
+	}
+
+	var p2 Path
+	if err := json.Unmarshal(data, &p2); err != nil {
+		t.Fatal(err)
+	}
+
+	if !reflect.DeepEqual(p1, p2) {
+		t.Errorf("got %+v, want %+v", p1, p2)
+	}
+
+}
