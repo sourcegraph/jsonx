@@ -15,4 +15,4 @@ files:
 
 * Where the original TypeScript code's API is not idiomatic in Go, this library
   does not (yet) attempt to provide an idiomatic Go API. This is mainly evident
-  in the error return API for parsing and scanning errosr.
+  in the error return API for parsing and scanning errors.
