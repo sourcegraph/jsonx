@@ -5,7 +5,10 @@
 
 package jsonx
 
-import "testing"
+import (
+	"encoding/json"
+	"testing"
+)
 
 func TestComputePropertyEdit(t *testing.T) {
 	defaultFormatOptions := FormatOptions{
@@ -348,6 +351,16 @@ func TestComputePropertyEdit(t *testing.T) {
 				path:  MakePath(1, "foo", 0),
 				value: 4,
 				want:  "[\n  1,\n  {\n    \"foo\": [\n      4 // This is a comment\n    ]\n  },\n  3\n]",
+			},
+		})
+	})
+	t.Run("set raw JSON", func(t *testing.T) {
+		assertEdits(t, []testCase{
+			{
+				input: "{\n  \"x\": \"y\"\n}",
+				path:  PropertyPath("x"),
+				value: json.RawMessage(`/*c*/"z"`),
+				want:  "{\n  \"x\": /*c*/ \"z\"\n}",
 			},
 		})
 	})
