@@ -121,6 +121,9 @@ func computePropertyEdit(text string, path Path, valueObj interface{}, insertion
 						// remove the comma of the next node
 						next := parent.Children[1]
 						removeEnd = next.Offset
+					} else {
+						// remove trailing comma after this node, if any
+						removeEnd = parent.Offset + parent.Length - 1
 					}
 				}
 				edits, err := FormatEdit(text, Edit{Offset: removeBegin, Length: removeEnd - removeBegin, Content: ""}, options)

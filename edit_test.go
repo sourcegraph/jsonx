@@ -214,6 +214,28 @@ func TestComputePropertyEdit(t *testing.T) {
 			},
 		})
 	})
+	t.Run("remove property if ends with comma", func(t *testing.T) {
+		assertEdits(t, []testCase{
+			{
+				input:  "{\n  \"x\": \"y\",\n}",
+				path:   PropertyPath("x"),
+				remove: true,
+				want:   "{}",
+			},
+			{
+				input:  "{\n  \"x\": \"y\" ,\n}",
+				path:   PropertyPath("x"),
+				remove: true,
+				want:   "{}",
+			},
+			{
+				input:  "{\n  \"x\": \"y\", \"a\": [],\n}",
+				path:   PropertyPath("a"),
+				remove: true,
+				want:   "{\n  \"x\": \"y\",\n}",
+			},
+		})
+	})
 	t.Run("insert item to empty array", func(t *testing.T) {
 		assertEdits(t, []testCase{
 			{
