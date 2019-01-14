@@ -17,7 +17,7 @@ func TestParser(t *testing.T) {
 		want    string
 		errors  bool
 	}{
-		"": {want: ""},
+		"": {want: "", errors: true},
 
 		// literals
 		"true":                      {want: "true"},
