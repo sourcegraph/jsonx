@@ -307,7 +307,7 @@ func (s *Scanner) scanNext() SyntaxKind {
 	case charCodeSlash:
 		start := s.pos - 1
 		// Single-line comment
-		if s.text[s.pos+1] == charCodeSlash {
+		if s.pos+1 < len(s.text) && s.text[s.pos+1] == charCodeSlash {
 			s.pos += 2
 
 			for s.pos < s.len {
@@ -326,7 +326,7 @@ func (s *Scanner) scanNext() SyntaxKind {
 		}
 
 		// Multi-line comment
-		if s.text[s.pos+1] == charCodeAsterisk {
+		if s.pos+1 < len(s.text) && s.text[s.pos+1] == charCodeAsterisk {
 			s.pos += 2
 
 			safeLength := s.len - 1 // For lookahead.
