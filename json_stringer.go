@@ -4,9 +4,9 @@ package jsonx
 
 import "strconv"
 
-const _ParseErrorCode_name = "InvalidSymbolInvalidNumberFormatPropertyNameExpectedValueExpectedColonExpectedCommaExpectedCloseBraceExpectedCloseBracketExpectedEndOfFileExpectedEmptyStringIsInvalid"
+const _ParseErrorCode_name = "InvalidSymbolInvalidNumberFormatPropertyNameExpectedValueExpectedColonExpectedCommaExpectedCloseBraceExpectedCloseBracketExpectedEndOfFileExpected"
 
-var _ParseErrorCode_index = [...]uint8{0, 13, 32, 52, 65, 78, 91, 109, 129, 146, 166}
+var _ParseErrorCode_index = [...]uint8{0, 13, 32, 52, 65, 78, 91, 109, 129, 146}
 
 func (i ParseErrorCode) String() string {
 	if i < 0 || i >= ParseErrorCode(len(_ParseErrorCode_index)-1) {
