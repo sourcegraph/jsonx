@@ -27,7 +27,7 @@ func TestScanner(t *testing.T) {
 		"/* this is a \ncomment 你好*/":   {BlockCommentTrivia},
 		"/* this is a":                  {BlockCommentTrivia}, // unexpected end,
 		"/* this is a \ncomment 你好":     {BlockCommentTrivia},
-		"/ ttt": {Unknown, Trivia, Unknown}, // broken comment,
+		"/ ttt":                         {Unknown, Trivia, Unknown}, // broken comment,
 
 		// strings
 		`"test"`:              {StringLiteral},
@@ -70,6 +70,9 @@ func TestScanner(t *testing.T) {
 		// unexpected end
 		"-":  {Unknown},
 		".0": {Unknown},
+
+		// malformed input
+		"/": {Unknown},
 
 		// keywords: true, false, null
 		"true":  {TrueKeyword},
