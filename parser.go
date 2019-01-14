@@ -27,6 +27,10 @@ type ParseOptions struct {
 //
 // Source: https://github.com/Microsoft/vscode/blob/c0bc1ace7ca3ce2d6b1aeb2bde9d1bb0f4b4bae6/src/vs/base/common/json.ts#L638
 func Parse(text string, options ParseOptions) ([]byte, []ParseErrorCode) {
+	if text == "" {
+		return nil, []ParseErrorCode{EmptyStringIsInvalid}
+	}
+
 	var currentProperty struct {
 		name  string
 		valid bool
@@ -114,4 +118,5 @@ const (
 	CloseBraceExpected
 	CloseBracketExpected
 	EndOfFileExpected
+	EmptyStringIsInvalid
 )
