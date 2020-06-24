@@ -114,4 +114,18 @@ const (
 	CloseBraceExpected
 	CloseBracketExpected
 	EndOfFileExpected
+	InvalidCommentToken
+
+	// These get the ugly ParseError prefix because they conflict with existing
+	// ScanErrorCode constants, and the ScanErrorCode constants existed first,
+	// so we can't change them for BC reasons.
+	ParseErrorUnexpectedEndOfComment
+	ParseErrorUnexpectedEndOfString
+	ParseErrorUnexpectedEndOfNumber
+	ParseErrorInvalidUnicode
+	ParseErrorInvalidEscapeCharacter
+	ParseErrorInvalidCharacter
+
+	// A catch all for an unexpected ScanErrorCode.
+	InvalidScanErrorCode
 )
