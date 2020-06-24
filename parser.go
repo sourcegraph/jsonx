@@ -7,6 +7,7 @@ package jsonx
 
 import (
 	"encoding/json"
+	"fmt"
 )
 
 // ParseOptions specifies options for JSON parsing.
@@ -27,6 +28,16 @@ type ParseOptions struct {
 //
 // Source: https://github.com/Microsoft/vscode/blob/c0bc1ace7ca3ce2d6b1aeb2bde9d1bb0f4b4bae6/src/vs/base/common/json.ts#L638
 func Parse(text string, options ParseOptions) ([]byte, []ParseErrorCode) {
+	data, errors := ParseWithDetailedErrors(text, options)
+	var codes []ParseErrorCode
+	for _, err := range errors {
+		codes = append(codes, err.Code)
+	}
+
+	return data, codes
+}
+
+func ParseWithDetailedErrors(text string, options ParseOptions) ([]byte, []ParseError) {
 	var currentProperty struct {
 		name  string
 		valid bool
@@ -48,7 +59,7 @@ func Parse(text string, options ParseOptions) ([]byte, []ParseErrorCode) {
 		}
 	}
 
-	var errors []ParseErrorCode
+	var errors []ParseError
 	visitor := Visitor{
 		OnObjectBegin: func(offset, length int) {
 			object := map[string]interface{}{}
@@ -82,7 +93,11 @@ func Parse(text string, options ParseOptions) ([]byte, []ParseErrorCode) {
 			onValue(value)
 		},
 		OnError: func(errorCode ParseErrorCode, offset, length int) {
-			errors = append(errors, errorCode)
+			errors = append(errors, ParseError{
+				Code:   errorCode,
+				Offset: offset,
+				Length: length,
+			})
 		},
 	}
 	Walk(text, options, visitor)
@@ -115,3 +130,13 @@ const (
 	CloseBracketExpected
 	EndOfFileExpected
 )
+
+type ParseError struct {
+	Code   ParseErrorCode
+	Offset int
+	Length int
+}
+
+func (pe *ParseError) Error() string {
+	return fmt.Sprintf("parse error of type %v at bytes %d-%d", pe.Code, pe.Offset, pe.Offset+pe.Length)
+}
