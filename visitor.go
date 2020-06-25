@@ -126,10 +126,32 @@ func (w *walker) onError(errorCode ParseErrorCode) {
 func (w *walker) scanNext() SyntaxKind {
 	for {
 		token := w.scanner.Scan()
+		switch w.scanner.Err() {
+		case None:
+			// No error; just break out and let the rest of the function work as
+			// expected.
+		case UnexpectedEndOfComment:
+			if w.options.Comments {
+				w.handleError(ParseErrorUnexpectedEndOfComment, nil, nil)
+			}
+		case UnexpectedEndOfString:
+			w.handleError(ParseErrorUnexpectedEndOfString, nil, nil)
+		case UnexpectedEndOfNumber:
+			w.handleError(ParseErrorUnexpectedEndOfNumber, nil, nil)
+		case InvalidUnicode:
+			w.handleError(ParseErrorInvalidUnicode, nil, nil)
+		case InvalidEscapeCharacter:
+			w.handleError(ParseErrorInvalidEscapeCharacter, nil, nil)
+		case InvalidCharacter:
+			w.handleError(ParseErrorInvalidCharacter, nil, nil)
+		default:
+			w.handleError(InvalidScanErrorCode, nil, nil)
+		}
+
 		switch token {
 		case LineCommentTrivia, BlockCommentTrivia:
 			if !w.options.Comments {
-				w.handleError(InvalidSymbol, nil, nil)
+				w.handleError(InvalidCommentToken, nil, nil)
 			}
 		case Unknown:
 			w.handleError(InvalidSymbol, nil, nil)
