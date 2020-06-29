@@ -5,4 +5,4 @@
 // comment-aware JSON parsing and editing APIs in TypeScript.
 package jsonx
 
-//go:generate stringer -type=ParseErrorCode,ScanErrorCode,SyntaxKind,NodeType -output=json_stringer.go
+//go:generate go run golang.org/x/tools/cmd/stringer -type=ParseErrorCode,ScanErrorCode,SyntaxKind,NodeType -output=json_stringer.go
