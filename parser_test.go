@@ -35,14 +35,14 @@ func TestParser(t *testing.T) {
 		"1.2E-3 // comment":         {want: "1.2E-3"},
 
 		// objects
-		"{}":                                                                                                        {want: "{}"},
-		`{ "foo": true }`:                                                                                           {want: `{"foo":true}`},
-		`{ "bar": 8, "xoo": "foo" }`:                                                                                {want: `{"bar":8,"xoo":"foo"}`},
-		`{ "hello": [], "world": {} }`:                                                                              {want: `{"hello":[],"world":{}}`},
-		`{ "a": false, "b": true, "c": [ 7.4 ] }`:                                                                   {want: `{"a":false,"b":true,"c":[7.4]}`},
+		"{}":                           {want: "{}"},
+		`{ "foo": true }`:              {want: `{"foo":true}`},
+		`{ "bar": 8, "xoo": "foo" }`:   {want: `{"bar":8,"xoo":"foo"}`},
+		`{ "hello": [], "world": {} }`: {want: `{"hello":[],"world":{}}`},
+		`{ "a": false, "b": true, "c": [ 7.4 ] }`: {want: `{"a":false,"b":true,"c":[7.4]}`},
 		`{ "blockComment": ["/*", "*/"], "brackets": [ ["{", "}"], ["[", "]"], ["(", ")"] ], "lineComment": "//" }`: {want: `{"blockComment":["/*","*/"],"brackets":[["{","}"],["[","]"],["(",")"]],"lineComment":"//"}`},
 		`{ "hello": { "again": { "inside": 5 }, "world": 1 }}`:                                                      {want: `{"hello":{"again":{"inside":5},"world":1}}`},
-		`{ "foo": /*hello*/true }`:                                                                                  {want: `{"foo":true}`},
+		`{ "foo": /*hello*/true }`: {want: `{"foo":true}`},
 
 		// arrays
 		"[]":                {want: "[]"},
