@@ -154,10 +154,7 @@ func (f *formatter) format(rangeStart, rangeEnd int) (editOperations []Edit) {
 }
 
 func (f *formatter) newLineAndIndent() string {
-	n := f.initialIndentLevel + f.indentLevel
-	if n < 0 {
-		n = 0
-	}
+	n := max(f.initialIndentLevel+f.indentLevel, 0)
 	return f.eol + strings.Repeat(f.indentValue, n)
 }
 
