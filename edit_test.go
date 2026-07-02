@@ -20,7 +20,7 @@ func TestComputePropertyEdit(t *testing.T) {
 	type testCase struct {
 		input       string
 		path        Path
-		value       interface{}
+		value       any
 		remove      bool
 		insertIndex func(properties []string) int
 		options     *FormatOptions
