@@ -30,13 +30,13 @@ const (
 //
 // Source: https://github.com/Microsoft/vscode/blob/c0bc1ace7ca3ce2d6b1aeb2bde9d1bb0f4b4bae6/src/vs/base/common/json.ts#L616
 type Node struct {
-	Type         NodeType    // the node's type
-	Value        interface{} // the node's value
-	Offset       int         // character offset of the node's starting position in the document
-	Length       int         // the length (in characters) of the node
-	ColumnOffset int         // character offset of the property's separator
-	Parent       *Node       // the node's parent or nil if this is the root node
-	Children     []*Node     // the node's children
+	Type         NodeType // the node's type
+	Value        any      // the node's value
+	Offset       int      // character offset of the node's starting position in the document
+	Length       int      // the length (in characters) of the node
+	ColumnOffset int      // character offset of the property's separator
+	Parent       *Node    // the node's parent or nil if this is the root node
+	Children     []*Node  // the node's children
 }
 
 // A Segment is a component of a JSON key path. It is either an object
@@ -64,7 +64,7 @@ func (s Segment) MarshalJSON() ([]byte, error) {
 // UnmarshalJSON implements json.Unmarshaler.
 func (s *Segment) UnmarshalJSON(data []byte) error {
 	var t Segment
-	var target interface{}
+	var target any
 	if len(data) > 0 && data[0] == '"' {
 		t.IsProperty = true
 		target = &t.Property
@@ -98,7 +98,7 @@ func PropertyPath(properties ...string) Path {
 // each of which may be either a string (which is treated as a property segment)
 // or an int (which is treated as an array index). Any other type causes it
 // to panic.
-func MakePath(components ...interface{}) Path {
+func MakePath(components ...any) Path {
 	segments := make([]Segment, len(components))
 	for i, c := range components {
 		switch v := c.(type) {
@@ -154,7 +154,7 @@ func ParseTree(text string, options ParseOptions) (root *Node, errors []ParseErr
 			currentParent = currentParent.Parent
 			ensurePropertyComplete(offset + length)
 		},
-		OnLiteralValue: func(value interface{}, offset, length int) {
+		OnLiteralValue: func(value any, offset, length int) {
 			onValue(&Node{Type: literalNodeType(value), Offset: offset, Length: length, Parent: currentParent, Value: value})
 			ensurePropertyComplete(offset + length)
 		},
@@ -180,7 +180,7 @@ func ParseTree(text string, options ParseOptions) (root *Node, errors []ParseErr
 	return root, errors
 }
 
-func literalNodeType(value interface{}) NodeType {
+func literalNodeType(value any) NodeType {
 	switch value.(type) {
 	case bool:
 		return Boolean
@@ -254,17 +254,17 @@ func FindNodeAtLocation(root *Node, path Path) *Node {
 // NodeValue returns the JSON parse tree node's value.
 //
 // Source: https://github.com/Microsoft/vscode/blob/c0bc1ace7ca3ce2d6b1aeb2bde9d1bb0f4b4bae6/src/vs/base/common/json.ts#L782
-func NodeValue(node Node) interface{} {
+func NodeValue(node Node) any {
 	switch node.Type {
 	case Array:
-		array := make([]interface{}, len(node.Children))
+		array := make([]any, len(node.Children))
 		for i, child := range node.Children {
 			array[i] = NodeValue(*child)
 		}
 		return array
 
 	case Object:
-		object := make(map[string]interface{}, len(node.Children))
+		object := make(map[string]any, len(node.Children))
 		for _, prop := range node.Children {
 			object[prop.Children[0].Value.(string)] = NodeValue(*prop.Children[1])
 		}

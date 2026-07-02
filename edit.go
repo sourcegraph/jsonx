@@ -30,7 +30,7 @@ type Edit struct {
 // insert the value (given the existing properties, in order).
 //
 // Source: https://github.com/Microsoft/vscode/blob/c0bc1ace7ca3ce2d6b1aeb2bde9d1bb0f4b4bae6/src/vs/base/common/jsonEdit.ts#L14
-func ComputePropertyEdit(text string, path Path, value interface{}, insertionIndex func(properties []string) int, options FormatOptions) ([]Edit, []ParseErrorCode, error) {
+func ComputePropertyEdit(text string, path Path, value any, insertionIndex func(properties []string) int, options FormatOptions) ([]Edit, []ParseErrorCode, error) {
 	if value == nil {
 		value = json.RawMessage("null") // otherwise would remove property
 	}
@@ -45,7 +45,7 @@ func ComputePropertyRemoval(text string, path Path, options FormatOptions) ([]Ed
 	return computePropertyEdit(text, path, nil, nil, options)
 }
 
-func computePropertyEdit(text string, path Path, valueObj interface{}, insertionIndex func(properties []string) int, options FormatOptions) ([]Edit, []ParseErrorCode, error) {
+func computePropertyEdit(text string, path Path, valueObj any, insertionIndex func(properties []string) int, options FormatOptions) ([]Edit, []ParseErrorCode, error) {
 	// Tolerate errors in value if it's json.RawMessage.
 	var value string
 	if v, ok := valueObj.(json.RawMessage); ok {

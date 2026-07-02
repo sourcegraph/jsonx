@@ -34,7 +34,7 @@ type Visitor struct {
 
 	// Invoked when a literal value is encountered. The offset and length represent
 	// the location of the literal value.
-	OnLiteralValue func(value interface{}, offset, length int)
+	OnLiteralValue func(value any, offset, length int)
 
 	// Invoked when a comma or colon separator is encountered. The offset and length
 	// represent the location of the separator.
@@ -105,7 +105,7 @@ func (w *walker) onArrayEnd() {
 	}
 }
 
-func (w *walker) onLiteralValue(value interface{}) {
+func (w *walker) onLiteralValue(value any) {
 	if w.visitor.OnLiteralValue != nil {
 		w.visitor.OnLiteralValue(value, w.scanner.TokenOffset(), w.scanner.TokenLength())
 	}

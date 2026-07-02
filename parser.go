@@ -43,13 +43,13 @@ func ParseWithDetailedErrors(text string, options ParseOptions) ([]byte, []Parse
 		valid bool
 	}
 	type parent struct {
-		array  *[]interface{}
-		object map[string]interface{}
+		array  *[]any
+		object map[string]any
 	}
-	currentParent := parent{array: &[]interface{}{}}
+	currentParent := parent{array: &[]any{}}
 	previousParents := []parent{}
 
-	onValue := func(value interface{}) {
+	onValue := func(value any) {
 		if currentParent.array != nil {
 			*currentParent.array = append(*currentParent.array, value)
 		} else if currentProperty.valid {
@@ -62,7 +62,7 @@ func ParseWithDetailedErrors(text string, options ParseOptions) ([]byte, []Parse
 	var errors []ParseError
 	visitor := Visitor{
 		OnObjectBegin: func(offset, length int) {
-			object := map[string]interface{}{}
+			object := map[string]any{}
 			onValue(object)
 			previousParents = append(previousParents, currentParent)
 			currentParent = parent{object: object}
@@ -78,7 +78,7 @@ func ParseWithDetailedErrors(text string, options ParseOptions) ([]byte, []Parse
 			previousParents = previousParents[:len(previousParents)-1]
 		},
 		OnArrayBegin: func(offset, length int) {
-			array := &[]interface{}{}
+			array := &[]any{}
 			onValue(array)
 			previousParents = append(previousParents, currentParent)
 			currentParent = parent{array: array}
@@ -89,7 +89,7 @@ func ParseWithDetailedErrors(text string, options ParseOptions) ([]byte, []Parse
 			currentParent = previousParents[len(previousParents)-1]
 			previousParents = previousParents[:len(previousParents)-1]
 		},
-		OnLiteralValue: func(value interface{}, offset, length int) {
+		OnLiteralValue: func(value any, offset, length int) {
 			onValue(value)
 		},
 		OnError: func(errorCode ParseErrorCode, offset, length int) {
