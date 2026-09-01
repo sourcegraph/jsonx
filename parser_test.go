@@ -24,7 +24,7 @@ func TestParser(t *testing.T) {
 		"false":                     {want: "false"},
 		"null":                      {want: "null"},
 		`"foo"`:                     {want: `"foo"`},
-		`"\"-\\-\/-\b-\f-\n-\r-\t"`: {want: `"\"-\\-/-\u0008-\u000c-\n-\r-\t"`},
+		`"\"-\\-\/-\b-\f-\n-\r-\t"`: {want: `"\"-\\-/-\b-\f-\n-\r-\t"`},
 		`"\u00DC"`:                  {want: `"Ü"`},
 		"9":                         {want: "9"},
 		"-9":                        {want: "-9"},
